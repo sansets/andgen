@@ -1,0 +1,46 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>id.andgen.andgen</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>AndGen</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="sandisetiawan444@gmail.com" url="https://www.github.com/sansets">Sandi Setiawan</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    About Plugin<br>
+    <em>This section will describe plugin description</em>
+  ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>org.jetbrains.android</depends>
+    <depends>com.intellij.modules.androidstudio</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="AndGen"
+                           displayType="BALLOON"/>
+
+    </extensions>
+
+    <actions>
+        <group id="AndGen.TopMenu"
+               text="_AndGen"
+               description="My plugin toolbar menu">
+            <action class="id.andgen.andgen.actions.json_to_data_class.JsonToDataClassAction"
+                    id="JSONToDataClassAction"
+                    text="_Create Data Class From JSON"
+                    description="Generate Data Class file from JSON">
+            </action>
+            <add-to-group group-id="MainMenu" anchor="last"/>
+        </group>
+    </actions>
+</idea-plugin>
