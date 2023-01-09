@@ -12,7 +12,7 @@ import com.intellij.psi.impl.file.PsiDirectoryFactory
 import id.andgen.andgen.StringResources
 import id.andgen.andgen.util.ext.convertToString
 import id.andgen.andgen.util.ext.showNotification
-import id.andgen.andgen.util.ext.toKotlinString
+import id.andgen.jsontokotlin.ext.toKotlinString
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.idea.core.util.toVirtualFile
 import java.io.File
