@@ -21,7 +21,6 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>org.jetbrains.android</depends>
     <depends>com.intellij.modules.androidstudio</depends>
-    <depends optional="true" config-file="wu.">wu.seal.tool.jsontokotlin</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->

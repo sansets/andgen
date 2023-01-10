@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":lib"))
+    implementation(project(":libraries:jsontokotlin"))
 }
 
 // Configure Gradle IntelliJ Plugin

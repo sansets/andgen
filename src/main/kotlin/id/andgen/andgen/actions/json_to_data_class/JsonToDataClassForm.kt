@@ -8,8 +8,8 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.vfs.VirtualFile
 import id.andgen.andgen.StringResources
+import id.andgen.andgen.util.ext.toPackageName
 import id.andgen.andgen.util.listener.OnChangedDocumentListener
-import id.andgen.jsontokotlin.ext.toPackageName
 import org.jetbrains.kotlin.idea.core.util.toVirtualFile
 import java.io.File
 import javax.swing.*

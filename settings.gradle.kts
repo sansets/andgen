@@ -1,3 +1,3 @@
 rootProject.name = "AndGen"
 
-include(":lib")
+include(":libraries:jsontokotlin")
