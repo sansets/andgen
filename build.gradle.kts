@@ -11,17 +11,21 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation(project(":libraries:jsontokotlin"))
+}
+
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     version.set("2021.3.1.16")
     type.set("AI") // Target IDE Platform
 
-    plugins.set(listOf("android"))
-}
-
-dependencies {
-    implementation("com.sealwu.jsontokotlin:library:3.7.4")
+    plugins.set(
+        listOf(
+            "android",
+        )
+    )
 }
 
 tasks {

@@ -14,8 +14,7 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    About Plugin<br>
-    <em>This section will describe plugin description</em>
+    AndGen is Android Studio plugin to generate JSON to Kotlin Data Class.
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.

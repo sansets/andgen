@@ -1,7 +1,8 @@
 package id.andgen.andgen.util.ext
 
-import wu.seal.jsontokotlin.library.JsonToKotlinBuilder
-import wu.seal.jsontokotlin.model.TargetJsonConverter
+import id.andgen.jsontokotlin.JsonToKotlinBuilder
+import id.andgen.jsontokotlin.model.TargetJsonConverter
+
 
 fun String?.toKotlinString(
     packageName: String?,

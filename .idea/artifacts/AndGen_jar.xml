@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AndGen:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AndGen_jar</output-path>
+    <root id="archive" name="AndGen.jar" />
+  </artifact>
+</component>
