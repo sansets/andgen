@@ -34,12 +34,25 @@
         <group id="AndGen.TopMenu"
                text="_AndGen"
                description="My plugin toolbar menu">
+            <separator/>
             <action class="id.andgen.andgen.actions.json_to_data_class.JsonToDataClassAction"
                     id="JSONToDataClassAction"
                     text="_Create Data Class From JSON"
                     description="Generate Data Class file from JSON">
             </action>
             <add-to-group group-id="MainMenu" anchor="last"/>
+        </group>
+
+        <group id="AndGen.TopMenu.New"
+               text="_New"
+               popup="true">
+            <action class="id.andgen.andgen.actions.image_picker.ImagePickerAction"
+                    id="ImagePicker"
+                    text="_Image Picker"
+                    icon="StudioIcons.Common.ANDROID_HEAD"
+                    description="Generate image picker feature">
+            </action>
+            <add-to-group group-id="AndGen.TopMenu" anchor="first"/>
         </group>
     </actions>
 </idea-plugin>
