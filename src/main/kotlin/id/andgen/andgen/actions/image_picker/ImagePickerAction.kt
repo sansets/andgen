@@ -78,7 +78,7 @@ class ImagePickerAction : AnAction() {
             createDirectory("$libraryDir/src/main/java")
             createDirectory("$libraryDir/src/test/java")
             packageName.split(".").forEachIndexed { index, _ ->
-                val path = packageName.split(".").take(index).joinToString(separator = "/")
+                val path = packageName.split(".").take(index + 1).joinToString(separator = "/")
 
                 createDirectory("$libraryDir/src/androidTest/java/$path")
                 createDirectory("$libraryDir/src/main/java/$path")
@@ -99,7 +99,7 @@ class ImagePickerAction : AnAction() {
             )
             project?.let {
                 GradleSyncInvoker.getInstance()
-                    .requestProjectSync(it, GradleSyncStats.Trigger.TRIGGER_IMPORT_ADT_MODULE)
+                    .requestProjectSync(it, GradleSyncStats.Trigger.TRIGGER_USER_SYNC_ACTION)
             }
 
             previousOutputPath = libraryDir
