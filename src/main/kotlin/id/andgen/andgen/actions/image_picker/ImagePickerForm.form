@@ -21,7 +21,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="ImagePicker"/>
+          <text value=""/>
           <toolTipText value="Example: ImagePicker"/>
         </properties>
       </component>
@@ -40,7 +40,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="com.example.imagepicker"/>
+          <text value=""/>
           <toolTipText value="Example: com.example.image_picker"/>
         </properties>
       </component>

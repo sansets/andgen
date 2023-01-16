@@ -13,6 +13,7 @@ import id.andgen.andgen.StringResources
 import id.andgen.andgen.util.ext.convertToString
 import id.andgen.andgen.util.ext.showNotification
 import id.andgen.andgen.util.ext.toKotlinString
+import id.andgen.andgen.util.ext.writeFile
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.idea.core.util.toVirtualFile
 import java.io.File
@@ -74,7 +75,7 @@ class JsonToDataClassAction : AnAction() {
                     jsonText = jsonText,
                 )
 
-            writeFile(runnable)
+            applicationManager.writeFile(runnable)
 
             previousOutputPath = outputPath
         } catch (exception: Exception) {
@@ -160,15 +161,5 @@ class JsonToDataClassAction : AnAction() {
         return PsiFileFactory
             .getInstance(project)
             .createFileFromText("${className}.kt", KotlinLanguage.INSTANCE, code.orEmpty())
-    }
-
-    private fun writeFile(runnable: Runnable) {
-        if (applicationManager.isDispatchThread) {
-            applicationManager.runWriteAction(runnable)
-        } else {
-            applicationManager.invokeLater {
-                applicationManager.runWriteAction(runnable)
-            }
-        }
     }
 }
