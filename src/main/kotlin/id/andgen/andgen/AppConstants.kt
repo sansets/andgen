@@ -10,4 +10,5 @@ object StringResources {
     const val ERROR_GENERATE_IMAGE_PICKER = "Failed to generate Image Picker"
     const val ERROR_CREATE_FILE = "Failed to create file:"
     const val ERROR_UPDATE_SETTING_GRADLE = "Failed to update settings.gradle"
+    const val ERROR_ADD_JITPACK_REPOSITORY = "Failed to add 'maven { url \"https://jitpack.io\" }'."
 }

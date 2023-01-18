@@ -2,6 +2,9 @@ package id.andgen.andgen.actions.image_picker.codes
 
 object ProguardRulesPro {
 
+    const val FILE_NAME = "proguard-rules"
+    const val EXTENSION = "pro"
+
     fun getCode(): String {
         return """
             # Add project specific ProGuard rules here.

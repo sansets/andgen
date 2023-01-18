@@ -2,6 +2,9 @@ package id.andgen.andgen.actions.image_picker.codes
 
 object BuildGradle {
 
+    const val FILE_NAME = "build"
+    const val EXTENSION = "gradle"
+
     fun getCode(packageName: String): String {
         return """
             plugins {
@@ -14,7 +17,7 @@ object BuildGradle {
                 compileSdk 33
             
                 defaultConfig {
-                    minSdk 21
+                    minSdk 26
                     targetSdk 33
             
                     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -34,11 +37,21 @@ object BuildGradle {
                 kotlinOptions {
                     jvmTarget = '1.8'
                 }
+            
+                buildFeatures {
+                    viewBinding true
+                }
             }
             
             dependencies {
                 implementation 'androidx.core:core-ktx:1.9.0'
+                implementation 'androidx.appcompat:appcompat:1.6.0'
                 implementation 'com.google.android.material:material:1.7.0'
+            
+                // Image Picker Library
+                implementation 'com.github.dhaval2404:imagepicker:2.1'
+                implementation "androidx.fragment:fragment-ktx:1.5.5"
+            
                 testImplementation 'junit:junit:4.13.2'
                 androidTestImplementation 'androidx.test.ext:junit:1.1.5'
                 androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

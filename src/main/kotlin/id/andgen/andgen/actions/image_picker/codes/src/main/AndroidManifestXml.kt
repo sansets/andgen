@@ -1,6 +1,9 @@
-package id.andgen.andgen.actions.image_picker.codes
+package id.andgen.andgen.actions.image_picker.codes.src.main
 
 object AndroidManifestXml {
+
+    const val FILE_NAME = "AndroidManifest"
+    const val EXTENSION = "xml"
 
     fun getCode(): String {
         return """
