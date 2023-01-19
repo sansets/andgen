@@ -42,23 +42,30 @@ import java.io.File
 class ImagePickerAction : AnAction() {
 
     private val applicationManager = ApplicationManager.getApplication()
-    private var previousOutputPath = ""
+
+    private var project: Project? = null
+    private var projectPath = ""
 
     private lateinit var psiDirectoryFactory: PsiDirectoryFactory
     private lateinit var psiFileFactory: PsiFileFactory
-    private lateinit var psiManager: PsiManager
-    private lateinit var psiDocumentManager: PsiDocumentManager
+
+    private var psiManager: PsiManager? = null
+    private var psiDocumentManager: PsiDocumentManager? = null
+
     private lateinit var gradleSyncInvoker: GradleSyncInvoker
 
     override fun actionPerformed(event: AnActionEvent) {
-        val project = event.project
+        project = event.project
+        projectPath = project?.basePath.orEmpty()
 
         if (!::psiDirectoryFactory.isInitialized) psiDirectoryFactory = PsiDirectoryFactory.getInstance(project)
         if (!::psiFileFactory.isInitialized) psiFileFactory = PsiFileFactory.getInstance(project)
-        if (!::psiManager.isInitialized && project != null) psiManager = PsiManager.getInstance(project)
-        if (!::psiDocumentManager.isInitialized && project != null) psiDocumentManager =
-            PsiDocumentManager.getInstance(project)
         if (!::gradleSyncInvoker.isInitialized) gradleSyncInvoker = GradleSyncInvoker.getInstance()
+
+        project?.let {
+            if (psiManager == null) psiManager = PsiManager.getInstance(it)
+            if (psiDocumentManager == null) psiDocumentManager = PsiDocumentManager.getInstance(it)
+        }
 
         showGeneratorDialog(event.project)
     }
@@ -71,19 +78,19 @@ class ImagePickerAction : AnAction() {
         // Generate if button 'OK' clicked
         if (dialog.showAndGet()) {
             generateImagePickerLibrary(
-                project = project,
                 packageName = dialog.getPackageName(),
                 libraryName = dialog.getLibraryName(),
-                libraryDir = dialog.getLibraryDirPath(),
+                libraryDir = "$projectPath/${dialog.getLibraryPath()}/${dialog.getLibraryName()}".replace("//", "/"),
+                libraryProjectPath = dialog.getLibraryPath(),
             )
         }
     }
 
     private fun generateImagePickerLibrary(
-        project: Project?,
         packageName: String,
         libraryName: String,
         libraryDir: String,
+        libraryProjectPath: String,
     ) {
         try {
             createDirectories(
@@ -93,7 +100,6 @@ class ImagePickerAction : AnAction() {
 
             applicationManager.writeFile(
                 getRunnableGenerateImagePicker(
-                    project = project,
                     packageName = packageName,
                     libraryDir = libraryDir,
                 )
@@ -102,11 +108,9 @@ class ImagePickerAction : AnAction() {
             addJitpackRepositoryToProject(project)
 
             updateProjectSettingGradle(
-                project = project,
                 libraryName = libraryName,
+                libraryPath = libraryProjectPath,
             )
-
-            previousOutputPath = libraryDir
         } catch (exception: Exception) {
             project.showNotification(
                 title = "${StringResources.TITLE_APP_NAME}: ${StringResources.TITLE_IMAGE_PICKER}",
@@ -117,13 +121,11 @@ class ImagePickerAction : AnAction() {
     }
 
     private fun getRunnableGenerateImagePicker(
-        project: Project?,
         packageName: String,
         libraryDir: String,
     ): Runnable {
         return Runnable {
             addFiles(
-                project = project,
                 packageName = packageName,
                 libraryDir = libraryDir,
             )
@@ -133,10 +135,15 @@ class ImagePickerAction : AnAction() {
     private fun createDirectory(
         dir: String,
     ) {
-        val directoryFile = File(dir)
-        if (!directoryFile.exists()) {
-            directoryFile.mkdir()
-            VfsUtil.markDirtyAndRefresh(false, false, false, directoryFile)
+        val dirNames = dir.split("/")
+        dirNames.forEachIndexed { index, _ ->
+            val newDir = dirNames.take(index + 1).joinToString(separator = "/")
+            val directoryFile = File(newDir)
+
+            if (!File(newDir).exists()) {
+                directoryFile.mkdir()
+                VfsUtil.markDirtyAndRefresh(false, false, false, directoryFile)
+            }
         }
     }
 
@@ -168,7 +175,6 @@ class ImagePickerAction : AnAction() {
     }
 
     private fun addFiles(
-        project: Project?,
         packageName: String,
         libraryDir: String,
     ) {
@@ -182,35 +188,30 @@ class ImagePickerAction : AnAction() {
         val kotlinVirtualFile = File("$libraryDir/src/main/java/${packageName.replace(".", "/")}").toVirtualFile()
 
         addPsiFileToDirectory(
-            project = project,
             virtualFile = projectVirtualFile,
             fileName = Gitignore.FILE_NAME,
             extension = Gitignore.EXTENSION,
             code = Gitignore.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = projectVirtualFile,
             fileName = BuildGradle.FILE_NAME,
             extension = BuildGradle.EXTENSION,
             code = BuildGradle.getCode(packageName),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = projectVirtualFile,
             fileName = ConsumerRulesPro.FILE_NAME,
             extension = ConsumerRulesPro.EXTENSION,
             code = ConsumerRulesPro.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = projectVirtualFile,
             fileName = ProguardRulesPro.FILE_NAME,
             extension = ProguardRulesPro.EXTENSION,
             code = ProguardRulesPro.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = mainVirtualFile,
             fileName = AndroidManifestXml.FILE_NAME,
             extension = AndroidManifestXml.EXTENSION,
@@ -219,21 +220,18 @@ class ImagePickerAction : AnAction() {
 
         // Add values file
         addPsiFileToDirectory(
-            project = project,
             virtualFile = valuesVirtualFile,
             fileName = ColorsXml.FILE_NAME,
             extension = ColorsXml.EXTENSION,
             code = ColorsXml.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = valuesVirtualFile,
             fileName = StringsXml.FILE_NAME,
             extension = StringsXml.EXTENSION,
             code = StringsXml.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = valuesVirtualFile,
             fileName = ThemesXml.FILE_NAME,
             extension = ThemesXml.EXTENSION,
@@ -242,7 +240,6 @@ class ImagePickerAction : AnAction() {
 
         // Add values night file
         addPsiFileToDirectory(
-            project = project,
             virtualFile = valuesNightVirtualFile,
             fileName = ColorsNightXml.FILE_NAME,
             extension = ColorsNightXml.EXTENSION,
@@ -251,7 +248,6 @@ class ImagePickerAction : AnAction() {
 
         // Add values locale in file
         addPsiFileToDirectory(
-            project = project,
             virtualFile = valuesInVirtualFile,
             fileName = StringsInXml.FILE_NAME,
             extension = StringsInXml.EXTENSION,
@@ -260,21 +256,18 @@ class ImagePickerAction : AnAction() {
 
         // Add drawable file
         addPsiFileToDirectory(
-            project = project,
             virtualFile = drawableVirtualFile,
             fileName = BaselineClose24Xml.FILE_NAME,
             extension = BaselineClose24Xml.EXTENSION,
             code = BaselineClose24Xml.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = drawableVirtualFile,
             fileName = BaselinePhotoCamera24Xml.FILE_NAME,
             extension = BaselinePhotoCamera24Xml.EXTENSION,
             code = BaselinePhotoCamera24Xml.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = drawableVirtualFile,
             fileName = BaselinePhotoLibrary24Xml.FILE_NAME,
             extension = BaselinePhotoLibrary24Xml.EXTENSION,
@@ -283,14 +276,12 @@ class ImagePickerAction : AnAction() {
 
         // Add layout file
         addPsiFileToDirectory(
-            project = project,
             virtualFile = layoutVirtualFile,
             fileName = AppBarDialogXml.FILE_NAME,
             extension = AppBarDialogXml.EXTENSION,
             code = AppBarDialogXml.getCode(),
         )
         addPsiFileToDirectory(
-            project = project,
             virtualFile = layoutVirtualFile,
             fileName = DialogFragmentImagePickerXml.FILE_NAME,
             extension = DialogFragmentImagePickerXml.EXTENSION,
@@ -299,7 +290,6 @@ class ImagePickerAction : AnAction() {
 
         // Add kotlin file
         addPsiFileToDirectory(
-            project = project,
             virtualFile = kotlinVirtualFile,
             fileName = ImagePickerDialogFragmentKotlin.FILE_NAME,
             extension = ImagePickerDialogFragmentKotlin.EXTENSION,
@@ -308,7 +298,6 @@ class ImagePickerAction : AnAction() {
     }
 
     private fun addPsiFileToDirectory(
-        project: Project?,
         virtualFile: VirtualFile?,
         fileName: String?,
         extension: String?,
@@ -343,20 +332,22 @@ class ImagePickerAction : AnAction() {
     }
 
     private fun updateProjectSettingGradle(
-        project: Project?,
         libraryName: String,
+        libraryPath: String,
     ) {
         try {
             val runnable = Runnable {
-                val virtualFile = File(project?.basePath + "/settings.gradle").toVirtualFile() ?: throw Exception()
-                val file = psiManager.findFile(virtualFile) ?: throw Exception()
+                val virtualFile = File("$projectPath/settings.gradle").toVirtualFile() ?: throw Exception()
+                val file = psiManager?.findFile(virtualFile) ?: throw Exception()
+                val libraryModule = if (libraryPath.isEmpty())
+                    "include ':$libraryName'"
+                else
+                    "include '${libraryPath.replace("/", ":")}:$libraryName'"
 
-                if (!file.text.contains("include ':${libraryName.lowercase()}'")) {
-                    val document = psiDocumentManager.getDocument(file) ?: throw Exception()
-                    document.setText(
-                        file.text.trimIndent() + "\n" +
-                                "include ':${libraryName.lowercase()}'"
-                    )
+                if (!file.text.contains(libraryModule)) {
+                    val document = psiDocumentManager?.getDocument(file) ?: throw Exception()
+
+                    document.setText(file.text.trimIndent() + "\n" + libraryModule)
                 }
             }
             WriteCommandAction.runWriteCommandAction(project, runnable)
@@ -374,8 +365,8 @@ class ImagePickerAction : AnAction() {
             val runnable = Runnable {
                 val settingGradleVirtualFile =
                     File(project?.basePath + "/settings.gradle").toVirtualFile() ?: throw Exception()
-                val settingGradleFile = psiManager.findFile(settingGradleVirtualFile) ?: throw Exception()
-                val settingGradleDocument = psiDocumentManager.getDocument(settingGradleFile) ?: throw Exception()
+                val settingGradleFile = psiManager?.findFile(settingGradleVirtualFile) ?: throw Exception()
+                val settingGradleDocument = psiDocumentManager?.getDocument(settingGradleFile) ?: throw Exception()
 
                 if (settingGradleFile.text.contains("dependencyResolutionManagement", true)) {
                     val codeLines = settingGradleFile.text.split("\n")
@@ -403,8 +394,8 @@ class ImagePickerAction : AnAction() {
                             ?: File(project?.basePath + "/build.gradle.kts").toVirtualFile()
                             ?: throw Exception()
 
-                    val buildGradleFile = psiManager.findFile(buildGradleVirtualFile) ?: throw Exception()
-                    val buildGradleDocument = psiDocumentManager.getDocument(settingGradleFile) ?: throw Exception()
+                    val buildGradleFile = psiManager?.findFile(buildGradleVirtualFile) ?: throw Exception()
+                    val buildGradleDocument = psiDocumentManager?.getDocument(settingGradleFile) ?: throw Exception()
 
                     val codeLines = buildGradleFile.text.split("\n")
                     val allprojectsIndex =
