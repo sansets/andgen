@@ -9,12 +9,13 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 
 class ImagePickerForm(
-    private val project: Project?
+    project: Project?
 ) : DialogWrapper(project) {
 
     companion object {
-        private const val DEFAULT_LIBRARY_NAME = "ImagePicker"
+        private const val DEFAULT_LIBRARY_NAME = "imagepicker"
         private const val DEFAULT_PACKAGE_NAME = "com.example.imagepicker"
+        private const val DEFAULT_PATH = "libraries"
     }
 
     private lateinit var plJsonToDataClass: JPanel
@@ -37,14 +38,17 @@ class ImagePickerForm(
 
     fun getLibraryName(): String {
         return tfLibraryName.text.orEmpty()
+            .trim()
+            .replace(" ", "")
+            .lowercase()
     }
 
     fun getPackageName(): String {
         return tfPackageName.text.orEmpty()
     }
 
-    fun getLibraryDirPath(): String {
-        return tfLibraryDir.text.replace(getLibraryName(), "")
+    fun getLibraryPath(): String {
+        return tfLibraryDir.text
     }
 
     private fun setDefaultLibraryName() {
@@ -56,6 +60,6 @@ class ImagePickerForm(
     }
 
     private fun setDefaultLibraryDirectory() {
-        tfLibraryDir.text = "${project?.basePath.orEmpty()}/${getLibraryName().lowercase()}"
+        tfLibraryDir.text = "/$DEFAULT_PATH"
     }
 }
