@@ -1,15 +1,19 @@
 package id.andgen.andgen.actions.image_picker
 
+import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import id.andgen.andgen.StringResources
+import org.jetbrains.kotlin.idea.core.util.toVirtualFile
+import java.io.File
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTextField
 
 class ImagePickerForm(
-    project: Project?
+    private val project: Project?
 ) : DialogWrapper(project) {
 
     companion object {
@@ -30,6 +34,7 @@ class ImagePickerForm(
         setDefaultLibraryName()
         setDefaultPackageName()
         setDefaultLibraryDirectory()
+        initFileOutputIconOnClickListener()
     }
 
     override fun createCenterPanel(): JComponent {
@@ -61,5 +66,21 @@ class ImagePickerForm(
 
     private fun setDefaultLibraryDirectory() {
         tfLibraryDir.text = "/$DEFAULT_PATH"
+    }
+
+    private fun initFileOutputIconOnClickListener() {
+        tfLibraryDir.addActionListener {
+            val virtualFile = File(project?.basePath.orEmpty()).toVirtualFile()
+            val selectedDirectory = FileChooser.chooseFile(
+                FileChooserDescriptorFactory.createSingleFolderDescriptor(),
+                tfLibraryDir,
+                project,
+                virtualFile,
+            )
+
+            if (selectedDirectory != null) {
+                tfLibraryDir.text = "${selectedDirectory.path.replace(project?.basePath.orEmpty(), "")}/"
+            }
+        }
     }
 }
