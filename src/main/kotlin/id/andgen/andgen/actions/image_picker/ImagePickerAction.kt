@@ -80,8 +80,14 @@ class ImagePickerAction : AnAction() {
             generateImagePickerLibrary(
                 packageName = dialog.getPackageName(),
                 libraryName = dialog.getLibraryName(),
-                libraryDir = "$projectPath/${dialog.getLibraryPath()}/${dialog.getLibraryName()}".replace("//", "/"),
-                libraryProjectPath = dialog.getLibraryPath(),
+                libraryDir = "$projectPath/${dialog.getLibraryPath()}/${dialog.getLibraryName()}"
+                    .split("/")
+                    .filter { it.isNotEmpty() }
+                    .joinToString("/"),
+                libraryProjectPath = dialog.getLibraryPath()
+                    .split("/")
+                    .filter { it.isNotEmpty() }
+                    .joinToString("/"),
             )
         }
     }
@@ -342,7 +348,7 @@ class ImagePickerAction : AnAction() {
                 val libraryModule = if (libraryPath.isEmpty())
                     "include ':$libraryName'"
                 else
-                    "include '${libraryPath.replace("/", ":")}:$libraryName'"
+                    "include ':${libraryPath.replace("/", ":")}:$libraryName'"
 
                 if (!file.text.contains(libraryModule)) {
                     val document = psiDocumentManager?.getDocument(file) ?: throw Exception()
