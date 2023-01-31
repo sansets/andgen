@@ -52,12 +52,16 @@
         <group id="AndGen.TopMenu.New"
                text="_New"
                popup="true">
+            <action class="id.andgen.andgen.actions.barcode_scanner.BarcodeScannerAction"
+                    id="BarcodeScanner"
+                    text="_Barcode Scanner"
+                    icon="StudioIcons.Common.ANDROID_HEAD"
+                    description="Generate barcode scanner feature"/>
             <action class="id.andgen.andgen.actions.image_picker.ImagePickerAction"
                     id="ImagePicker"
                     text="_Image Picker"
                     icon="StudioIcons.Common.ANDROID_HEAD"
-                    description="Generate image picker feature">
-            </action>
+                    description="Generate image picker feature"/>
             <add-to-group group-id="AndGen.TopMenu" anchor="first"/>
         </group>
     </actions>
