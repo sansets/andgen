@@ -18,6 +18,7 @@
     <br>
     Features:<br>
     <ul>
+        <li>Generate Barcode Scanner library feature.</li>
         <li>Generate Image Picker library feature.</li>
         <li>Generate JSON to Kotlin Data Class.</li>
     </ul>
