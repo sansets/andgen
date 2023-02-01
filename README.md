@@ -1,9 +1,10 @@
 # AndGen
 AndGen is Android Studio plugin to generate code
 
-![](https://github.com/sansets/andgen/blob/master/screenshots/Screenshot%202023-01-26%20at%2020.55.21.png)
+![](https://github.com/sansets/andgen/blob/master/screenshots/Screenshot%202023-02-01%20at%2017.17.48.png)
 
 ## Features
+- Generate Barcode Scanner library feature.
 - Generate Image Picker library feature.
 - Generate JSON to Kotlin Data Class.
 
@@ -11,13 +12,11 @@ AndGen is Android Studio plugin to generate code
 <table>
   <thead>
     <tr>
-      <th>Image Picker</th>
-      <th>JSON to Kotlin Data Class</th>
+      <th>Barcode Scanner Generator Feature</th>
     </tr>
   </thead>
   <tbody>
-    <td><img src="https://github.com/sansets/andgen/blob/master/screenshots/imagepicker/Screenshot%202023-01-26%20at%2020.56.23.png" /></td>
-    <td><img src="https://github.com/sansets/andgen/blob/master/screenshots/jsontokotlin/Screenshot%202023-01-26%20at%2020.56.50.png" /></td>
+    <td><img src="https://github.com/sansets/andgen/blob/master/screenshots/Screenshot%202023-02-01%20at%2017.20.18.png" /></td>
   </tbody>
 </table>
 
