@@ -37,6 +37,12 @@
 
     </extensions>
 
+    <extensions defaultExtensionNs="com.android">
+        <tools.idea.wizard.template.wizardTemplateProvider
+                order="last"
+                implementation="id.andgen.andgen.recipes.custom_activity.CustomWizardTemplateProvider"/>
+    </extensions>
+
     <actions>
         <group id="AndGen.TopMenu"
                text="_AndGen"
